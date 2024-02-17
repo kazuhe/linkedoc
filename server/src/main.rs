@@ -6,8 +6,14 @@ async fn hello() -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    HttpServer::new(|| App::new().route("/", web::get().to(hello)))
-        .bind("0.0.0.0:8080")?
-        .run()
-        .await
+    HttpServer::new(|| {
+        App::new().route("/hello", web::get().to(hello)).service(
+            actix_files::Files::new("/", "../client/out")
+                .index_file("index.html")
+                .show_files_listing(),
+        )
+    })
+    .bind("0.0.0.0:8080")?
+    .run()
+    .await
 }
