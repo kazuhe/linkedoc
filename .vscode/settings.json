@@ -1,0 +1,25 @@
+{
+  /**
+   * 保存時に rustfmt でフォーマットされる様に設定
+   */
+  "editor.formatOnSave": true,
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  /**
+   * リンターを clippy に設定
+   */
+  "rust-analyzer.check.command": "clippy",
+  /**
+   * inlayHints のスタイルを変更
+   */
+  "editor.inlayHints.fontSize": 10,
+  "workbench.colorCustomizations": {
+    "[Default Dark+]": {
+      "editorInlayHint.foreground": "#bbb",
+      "editorInlayHint.background": "#3d3d3d48",
+      "editorInlayHint.typeForeground": "#fdb6fdf0",
+      "editorInlayHint.parameterForeground": "#fdb6fdf0"
+    }
+  }
+}
