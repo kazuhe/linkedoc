@@ -1,23 +1,50 @@
 "use client";
 import Image from "next/image";
 import useSWR from "swr";
+import useSWRMutation from "swr/mutation";
 
 const fetcher = async (url: string) => {
   const result = await fetch(url);
   return result.json();
 };
 
+const initialize = async (url: string) => {
+  const result = await fetch(url, {
+    method: "POST",
+  });
+  return await result.json();
+};
+
 export default function Home() {
-  const { data, error, isLoading } = useSWR(
-    "http://localhost:8080/hello",
-    fetcher
+  const {
+    data: helloData,
+    error: helloError,
+    isLoading: helloIsLoading,
+  } = useSWR("http://localhost:8080/hello", fetcher);
+
+  // 初期化
+  const { trigger, data } = useSWRMutation(
+    "http://localhost:8080/initialize",
+    initialize
   );
-  if (error) return <div>Failed to load</div>;
-  if (isLoading) return <div>Loading...</div>;
+
+  if (helloError) return <div>Failed to load</div>;
+  if (helloIsLoading) return <div>Loading...</div>;
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div>return data: {JSON.stringify(data)}</div>
+      <div>return helloData: {JSON.stringify(helloData)}</div>
+
+      <button
+        className="px-4 py-2 mt-5 rounded bg-zinc-200 text-zinc-900"
+        onClick={() => {
+          trigger();
+        }}
+      >
+        初期化
+      </button>
+      <div>初期化の結果: {JSON.stringify(data)}</div>
+
       <div className="mt-5 z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
         <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
           Get started by editing&nbsp;
