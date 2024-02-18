@@ -1,3 +1,5 @@
+mod initialize;
+
 use actix_cors::Cors;
 use actix_web::{web, App, HttpServer, Responder, Result};
 use serde::Serialize;
@@ -23,6 +25,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .wrap(cors)
             .route("/hello", web::get().to(hello))
+            .configure(initialize::config)
             .service(
                 actix_files::Files::new("/", "../client/out")
                     .index_file("index.html")

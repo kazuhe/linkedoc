@@ -9,6 +9,7 @@ edition = "2021"
 actix-cors = "0.7.0"
 actix-files = "0.6.5"
 actix-web = "4.5.1"
+dirs = "5.0.1"
 # derive フィーチャーはコード生成のための機能を提供する
 # serde が #[derive] アトリビュートを使用して自動的にシリアライズおよびデシリアライズのコードを生成できる
 serde = { version = "1.0.196", features = ["derive"] }
