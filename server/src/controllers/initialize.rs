@@ -23,9 +23,6 @@ pub async fn initialize() -> impl Responder {
     match is_initialized() {
         Ok(true) => HttpResponse::Ok().json("Already initialized"),
         Ok(false) => {
-            if let Err(err) = config::create_linkedoc_dir() {
-                return HttpResponse::InternalServerError().json(err.to_string());
-            }
             if let Err(err) = config::create_config() {
                 return HttpResponse::InternalServerError().json(err.to_string());
             }

@@ -19,17 +19,6 @@ fn get_linkedoc_dir() -> Result<PathBuf, io::Error> {
 }
 
 /**
- * "<HOME>/linkedoc" ディレクトリを作成する
- */
-pub fn create_linkedoc_dir() -> Result<(), io::Error> {
-    let linkedoc_dir = get_linkedoc_dir()?;
-    if !linkedoc_dir.exists() {
-        fs::create_dir(linkedoc_dir)?;
-    }
-    Ok(())
-}
-
-/**
  * 設定ファイル
  */
 #[derive(Serialize, Deserialize)]
@@ -49,6 +38,11 @@ pub fn get_config_path() -> Result<PathBuf, io::Error> {
 * 設定ファイルを作成する
 */
 pub fn create_config() -> Result<(), io::Error> {
+    // "<HOME>/linkedoc" ディレクトリが存在しない場合は作成する
+    let linkedoc_dir = get_linkedoc_dir()?;
+    if !linkedoc_dir.exists() {
+        fs::create_dir(linkedoc_dir)?;
+    }
     let config = Config {
         latest_document_id: 0,
     };
