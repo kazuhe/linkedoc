@@ -13,3 +13,4 @@ dirs = "5.0.1"
 # derive フィーチャーはコード生成のための機能を提供する
 # serde が #[derive] アトリビュートを使用して自動的にシリアライズおよびデシリアライズのコードを生成できる
 serde = { version = "1.0.196", features = ["derive"] }
+serde_json = "1.0.114"
