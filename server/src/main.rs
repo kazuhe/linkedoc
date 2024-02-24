@@ -26,6 +26,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .wrap(cors)
             .route("/hello", web::get().to(hello))
+            .configure(controllers::document::config)
             .configure(controllers::initialize::config)
             .service(
                 actix_files::Files::new("/", "../client/out")
