@@ -8,6 +8,13 @@ const fetcher = async (url: string) => {
   return result.json();
 };
 
+const createDocument = async (url: string) => {
+  const result = await fetch(url, {
+    method: "POST",
+  });
+  return await result.json();
+};
+
 const initialize = async (url: string) => {
   const result = await fetch(url, {
     method: "POST",
@@ -22,14 +29,28 @@ export default function Home() {
     isLoading: helloIsLoading,
   } = useSWR("http://localhost:8080/hello", fetcher);
 
+  // ドキュメント一覧
+  const {
+    data: documentList,
+    error: getDocumentsError,
+    isLoading: getDocumentsIsLoading,
+  } = useSWR("http://localhost:8080/document", fetcher);
+
   // 初期化
   const { trigger, data } = useSWRMutation(
     "http://localhost:8080/initialize",
     initialize
   );
 
+  // ドキュメント作成
+  const { trigger: createDocumentTrigger, data: documentResult } =
+    useSWRMutation("http://localhost:8080/document", createDocument);
+
   if (helloError) return <div>Failed to load</div>;
   if (helloIsLoading) return <div>Loading...</div>;
+
+  if (getDocumentsError) return <div>[getDocumentsError]Failed to load</div>;
+  if (helloIsLoading) return <div>[getDocumentsError]Loading...</div>;
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -44,6 +65,23 @@ export default function Home() {
         初期化
       </button>
       <div>初期化の結果: {JSON.stringify(data)}</div>
+
+      <button
+        className="px-4 py-2 mt-5 rounded bg-zinc-200 text-zinc-900"
+        onClick={() => {
+          createDocumentTrigger();
+        }}
+      >
+        ドキュメントを作成
+      </button>
+      <div>ドキュメントを作成の結果: {JSON.stringify(documentResult)}</div>
+
+      <div>return documentList: {JSON.stringify(documentList)}</div>
+      <ul>
+        {documentList?.map((document: string[], index: number) => {
+          return <li key={index}>{document}</li>;
+        })}
+      </ul>
 
       <div className="mt-5 z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
         <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
