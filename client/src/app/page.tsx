@@ -8,9 +8,23 @@ const fetcher = async (url: string) => {
   return result.json();
 };
 
-const createDocument = async (url: string) => {
+type CreateDocumentRequest = {
+  path: string;
+  title: string;
+  description: string;
+  tags: string[];
+};
+
+const createDocument = async (
+  url: string,
+  { arg }: { arg: CreateDocumentRequest }
+) => {
   const result = await fetch(url, {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(arg),
   });
   return await result.json();
 };
@@ -69,7 +83,12 @@ export default function Home() {
       <button
         className="px-4 py-2 mt-5 rounded bg-zinc-200 text-zinc-900"
         onClick={() => {
-          createDocumentTrigger();
+          createDocumentTrigger({
+            path: "path/to/document",
+            title: "Document Title",
+            description: "Document Description",
+            tags: ["tag1", "tag2", "tag3"],
+          });
         }}
       >
         ドキュメントを作成

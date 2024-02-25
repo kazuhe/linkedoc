@@ -1,5 +1,24 @@
 use crate::models::config::{get_linkedoc_dir, read_config, write_config};
-use std::{fs::File, io};
+use chrono::{DateTime, Local};
+use serde::{Deserialize, Serialize};
+use std::{
+    fs::File,
+    io::{self, Write},
+};
+
+/**
+ * ドキュメント
+ */
+#[derive(Serialize, Deserialize)]
+struct Document {
+    pub id: i32,
+    pub path: String,
+    pub title: String,
+    pub description: String,
+    pub tags: Vec<String>,
+    pub created_at: DateTime<Local>,
+    pub updated_at: DateTime<Local>,
+}
 
 /**
  * ドキュメント一覧を取得する
@@ -27,11 +46,28 @@ pub fn get_documents() -> Result<Vec<String>, io::Error> {
 /**
  * ドキュメントを作成する
  */
-pub fn create_document() -> Result<(), io::Error> {
+pub fn create_document(
+    path: &str,
+    title: &str,
+    description: &str,
+    tags: &[String],
+) -> Result<(), io::Error> {
+    println!("create_document{}, {}, {}", path, title, description);
+
     let mut config = read_config()?;
     let new_file_name = format!("{}.md", config.latest_document_id + 1);
     let new_file_path = get_linkedoc_dir()?.join(new_file_name);
-    File::create(new_file_path)?;
+
+    // ファイルにメタデータを書き込む
+    let mut file = File::create(new_file_path)?;
+    let content = format!(
+        "---\ntitle: {}\ndescription: {}\ntags: [{}]\n---\n",
+        title,
+        description,
+        tags.join(", ")
+    );
+    file.write_all(content.as_bytes())?;
+
     config.latest_document_id += 1;
     write_config(&config)?;
     Ok(())
