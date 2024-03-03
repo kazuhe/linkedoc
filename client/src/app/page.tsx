@@ -21,13 +21,6 @@ export default function Home() {
     isLoading: helloIsLoading,
   } = useSWR("http://localhost:8080/hello", fetcher);
 
-  // ドキュメント一覧
-  const {
-    data: documentList,
-    error: getDocumentsError,
-    isLoading: getDocumentsIsLoading,
-  } = useSWR("http://localhost:8080/document", fetcher);
-
   // 初期化
   const { trigger, data } = useSWRMutation(
     "http://localhost:8080/initialize",
@@ -36,9 +29,6 @@ export default function Home() {
 
   if (helloError) return <div>Failed to load</div>;
   if (helloIsLoading) return <div>Loading...</div>;
-
-  if (getDocumentsError) return <div>[getDocumentsError]Failed to load</div>;
-  if (helloIsLoading) return <div>[getDocumentsError]Loading...</div>;
 
   return (
     <div>
@@ -52,12 +42,6 @@ export default function Home() {
         初期化
       </button>
       <div>初期化の結果: {JSON.stringify(data)}</div>
-      <div>return documentList: {JSON.stringify(documentList)}</div>
-      <ul>
-        {documentList?.map((document: string[], index: number) => {
-          return <li key={index}>{document}</li>;
-        })}
-      </ul>
     </div>
   );
 }

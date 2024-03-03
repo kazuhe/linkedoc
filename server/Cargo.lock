@@ -762,6 +762,7 @@ dependencies = [
  "actix-web",
  "chrono",
  "dirs",
+ "regex",
  "serde",
  "serde_json",
 ]

@@ -67,9 +67,9 @@ pub fn create_config() -> Result<(), io::Error> {
  */
 pub fn read_config() -> Result<Config, io::Error> {
     let config_path = get_config_path()?;
-    let mut file = File::open(config_path)?;
     let mut buf = String::new();
-    let _ = file.read_to_string(&mut buf);
+    let mut file = File::open(config_path)?;
+    file.read_to_string(&mut buf)?;
     let config = serde_json::from_str(&buf)?;
     Ok(config)
 }
