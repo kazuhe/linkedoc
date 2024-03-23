@@ -2,7 +2,7 @@ mod controllers;
 mod models;
 
 use actix_cors::Cors;
-use actix_web::{web, App, HttpServer, Responder, Result};
+use actix_web::{http::header::CONTENT_TYPE, web, App, HttpServer, Responder, Result};
 use serde::Serialize;
 
 #[derive(Serialize)]
@@ -22,7 +22,8 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         let cors = Cors::default()
             .allowed_origin("http://localhost:3000")
-            .allowed_methods(vec!["GET", "POST"]);
+            .allowed_methods(vec!["GET", "POST"])
+            .allowed_header(CONTENT_TYPE);
         App::new()
             .wrap(cors)
             .route("/hello", web::get().to(hello))
