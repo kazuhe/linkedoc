@@ -1,5 +1,7 @@
 # linkedoc
 
+Memo Application with Rust + TypeScript.
+
 ## Architecture
 
 ```mermaid
