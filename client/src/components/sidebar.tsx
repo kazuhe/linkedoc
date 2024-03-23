@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import React from "react";
 import {
   Typography,
@@ -12,8 +13,7 @@ import {
   AccordionBody,
 } from "@material-tailwind/react";
 import { Button } from "@/components/button";
-import Link from "next/link";
-import useSWR from "swr";
+import { useFetch } from "@/hooks/use-fetch";
 
 type Document = {
   id: number;
@@ -25,19 +25,11 @@ type Document = {
   updated_at: string;
 };
 
-const fetcher = async (url: string) => {
-  const result = await fetch(url);
-  return result.json();
-};
-
 export const Sidebar = () => {
   const [open, setOpen] = React.useState(0);
 
   // ドキュメント一覧
-  const { data, error, isLoading } = useSWR<Document[]>(
-    "http://localhost:8080/documents",
-    fetcher
-  );
+  const { data, error, isLoading } = useFetch<Document[]>("/documents");
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>[getDocumentsError]Failed to load</div>;
@@ -49,7 +41,9 @@ export const Sidebar = () => {
   return (
     <div className="w-full">
       <div className="p-4">
-        <h1 className="text-xl font-black tracking-wider">Linkedoc</h1>
+        <Link href="/">
+          <h1 className="text-xl font-black tracking-wider">Linkedoc</h1>
+        </Link>
         <Link href="/documents/new">
           <Button
             size="sm"
@@ -181,12 +175,6 @@ export const Sidebar = () => {
             {/* <UserCircleIcon className="h-5 w-5" /> */}s
           </ListItemPrefix>
           Profile
-        </ListItem>
-        <ListItem>
-          <ListItemPrefix>
-            {/* <PowerIcon className="h-5 w-5" /> */}s
-          </ListItemPrefix>
-          Log Out
         </ListItem>
       </List>
     </div>

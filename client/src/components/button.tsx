@@ -5,8 +5,7 @@ import { PropsWithChildren } from "react";
 type Props = {
   size: ButtonProps["size"];
   fullWidth: ButtonProps["fullWidth"];
-  className: string;
-};
+} & JSX.IntrinsicElements["button"];
 
 export const Button = (props: PropsWithChildren<Props>) => {
   return (

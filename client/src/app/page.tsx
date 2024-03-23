@@ -1,11 +1,6 @@
 "use client";
-import useSWR from "swr";
+import { useFetch } from "@/hooks/use-fetch";
 import useSWRMutation from "swr/mutation";
-
-const fetcher = async (url: string) => {
-  const result = await fetch(url);
-  return result.json();
-};
 
 const initialize = async (url: string) => {
   const result = await fetch(url, {
@@ -14,12 +9,8 @@ const initialize = async (url: string) => {
   return await result.json();
 };
 
-export default function Home() {
-  const {
-    data: helloData,
-    error: helloError,
-    isLoading: helloIsLoading,
-  } = useSWR("http://localhost:8080/hello", fetcher);
+const Home = () => {
+  const { data: helloData, error, isLoading } = useFetch<Document[]>("/hello");
 
   // 初期化
   const { trigger, data } = useSWRMutation(
@@ -27,8 +18,8 @@ export default function Home() {
     initialize
   );
 
-  if (helloError) return <div>Failed to load</div>;
-  if (helloIsLoading) return <div>Loading...</div>;
+  if (error) return <div>Failed to load</div>;
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <div>
@@ -44,4 +35,6 @@ export default function Home() {
       <div>初期化の結果: {JSON.stringify(data)}</div>
     </div>
   );
-}
+};
+
+export default Home;
