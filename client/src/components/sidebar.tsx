@@ -67,30 +67,28 @@ export const Sidebar = () => {
         </Link>
       </div>
       <List className="p-0">
-        {data?.map((document: Document) => {
-          return (
-            <Link key={document.id} href={`/documents/${document.id}`}>
-              <ListItem className="rounded-none px-4 text-sm text-white hover:bg-black-super-light hover:text-white">
-                <ListItemPrefix>
-                  <img
-                    src="/svg/file.svg"
-                    alt={document.title}
-                    width={16}
-                    height={16}
-                  />
-                </ListItemPrefix>
-                {document.title}
-                <ListItemSuffix>
-                  <Chip
-                    value="14"
-                    size="sm"
-                    className="text-white bg-black-light text-[10px]"
-                  />
-                </ListItemSuffix>
-              </ListItem>
-            </Link>
-          );
-        })}
+        {data?.map((document: Document) => (
+          <Link key={document.id} href={`/documents?id=${document.id}`}>
+            <ListItem className="rounded-none px-4 text-sm text-white hover:bg-black-super-light hover:text-white">
+              <ListItemPrefix>
+                <img
+                  src="/svg/file.svg"
+                  alt={document.title}
+                  width={16}
+                  height={16}
+                />
+              </ListItemPrefix>
+              {document.title}
+              <ListItemSuffix>
+                <Chip
+                  value="14"
+                  size="sm"
+                  className="text-white bg-black-light text-[10px]"
+                />
+              </ListItemSuffix>
+            </ListItem>
+          </Link>
+        ))}
         <hr className="my-2 border-black-light" />
         <Accordion
           open={open === 1}
