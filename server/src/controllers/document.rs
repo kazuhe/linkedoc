@@ -1,9 +1,19 @@
 use crate::models::document;
 use actix_web::{
-    web::{self, Json, ServiceConfig},
+    web::{self, Json, Path, ServiceConfig},
     HttpResponse, Responder,
 };
 use serde::{Deserialize, Serialize};
+
+/**
+ * ドキュメントを取得する
+ */
+pub async fn get(id: Path<u32>) -> impl Responder {
+    match document::get_document(id.into_inner()) {
+        Ok(document) => HttpResponse::Ok().json(document),
+        Err(err) => HttpResponse::InternalServerError().json(err.to_string()),
+    }
+}
 
 /**
  * ドキュメント一覧を取得する
@@ -38,7 +48,8 @@ pub async fn create(form: Json<CreateDocumentRequest>) -> impl Responder {
 */
 pub fn config(cfg: &mut ServiceConfig) {
     cfg.service(
-        web::scope("/document")
+        web::scope("/documents")
+            .route("/{id}", web::get().to(get))
             .route("", web::get().to(get_list))
             .route("", web::post().to(create)),
     );

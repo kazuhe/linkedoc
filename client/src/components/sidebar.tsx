@@ -35,7 +35,7 @@ export const Sidebar = () => {
 
   // ドキュメント一覧
   const { data, error, isLoading } = useSWR<Document[]>(
-    "http://localhost:8080/document",
+    "http://localhost:8080/documents",
     fetcher
   );
 
@@ -189,8 +189,6 @@ export const Sidebar = () => {
           Log Out
         </ListItem>
       </List>
-
-      <div>return documentList: {JSON.stringify(data)}</div>
     </div>
   );
 };

@@ -25,7 +25,7 @@ const createDocument = async (
 export default function Home() {
   // ドキュメント作成
   const { trigger: createDocumentTrigger, data: documentResult } =
-    useSWRMutation("http://localhost:8080/document", createDocument);
+    useSWRMutation("http://localhost:8080/documents", createDocument);
 
   return (
     <div>

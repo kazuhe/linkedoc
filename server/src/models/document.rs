@@ -66,6 +66,36 @@ tags: [tag1, tag2]
 }
 
 /**
+ * ドキュメントを取得する
+ */
+pub fn get_document(id: u32) -> Result<Document, io::Error> {
+    let linkedoc_dir = get_linkedoc_dir()?;
+    let file_name = format!("{}.md", id);
+    let file_path = linkedoc_dir.join(file_name);
+    let mut buf = String::new();
+    let mut file = File::open(&file_path)?;
+    file.read_to_string(&mut buf)?;
+    let (title, description, tags) = match extract_frontmatter(&buf) {
+        Some((title, description, tags)) => (title, description, tags),
+        None => {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidData,
+                format!("Invalid frontmatter in {}", file_path.display()),
+            ))
+        }
+    };
+    Ok(Document {
+        id,
+        path: "".to_string(),
+        title,
+        description,
+        tags: tags.iter().map(|s| s.to_string()).collect(),
+        created_at: Local::now(),
+        updated_at: Local::now(),
+    })
+}
+
+/**
  * ドキュメント一覧を取得する
  */
 pub fn get_documents() -> Result<Vec<Document>, io::Error> {
